@@ -1,0 +1,31 @@
+sudo: true
+language: node_js
+node_js:
+- node
+
+services:
+  - docker
+
+before_install:
+  - docker build -t anilvermaspeaks/docker-prod-workflow -f ./client/Dockerfile.dev .
+
+  script:
+    - docker run -e CI=true anilvermaspeaks/docker-prod-workflow npm run test -- --coverage
+
+after_success:
+  - docker build -t anilvermaspeaks/multi-client ./client
+   - docker build -t anilvermaspeaks/multi-nginx ./nginx
+   - docker build -t anilvermaspeaks/multi-server ./server
+   - docker build -t anilvermaspeaks/multi-worker ./worker
+
+deploy;
+  provide: elasticbeanstalk
+  region: "ap-south-1"
+  app: "docker-demo"
+  env: "Dockerdemo-env"
+  bucket_name: "elasticbeanstalk-ap-south-1-433300649846"
+  bucket_path: "docker-demo"
+  on:
+    branch: master
+  access_key_id: $AWS_ACCESS_KEY
+  secret_access_key: $AWS_SECRET_KEY
