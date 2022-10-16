@@ -17,15 +17,24 @@ after_success:
    - docker build -t anilvermaspeaks/multi-nginx ./nginx
    - docker build -t anilvermaspeaks/multi-server ./server
    - docker build -t anilvermaspeaks/multi-worker ./worker
+  #log in to docker cli(env set on travis)
+  - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_ID" --password-stdin
+  #take those images and push them to docker hub
+  - docker push anilvermaspeaks/multi-client
+  - docker push anilvermaspeaks/multi-nginx
+  - docker push anilvermaspeaks/multi-server
+  - docker push anilvermaspeaks/multi-worker
 
-deploy;
-  provide: elasticbeanstalk
-  region: "ap-south-1"
-  app: "docker-demo"
-  env: "Dockerdemo-env"
-  bucket_name: "elasticbeanstalk-ap-south-1-433300649846"
-  bucket_path: "docker-demo"
-  on:
-    branch: master
-  access_key_id: $AWS_ACCESS_KEY
-  secret_access_key: $AWS_SECRET_KEY
+
+
+# deploy;
+#   provide: elasticbeanstalk
+#   region: "ap-south-1"
+#   app: "docker-demo"
+#   env: "Dockerdemo-env"
+#   bucket_name: "elasticbeanstalk-ap-south-1-433300649846"
+#   bucket_path: "docker-demo"
+#   on:
+#     branch: master
+#   access_key_id: $AWS_ACCESS_KEY
+#   secret_access_key: $AWS_SECRET_KEY
