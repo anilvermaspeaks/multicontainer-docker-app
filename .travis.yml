@@ -26,15 +26,14 @@ after_success:
   - docker push anilvermaspeaks/multi-worker
 
 
-
-# deploy;
-#   provide: elasticbeanstalk
-#   region: "ap-south-1"
-#   app: "docker-demo"
-#   env: "Dockerdemo-env"
-#   bucket_name: "elasticbeanstalk-ap-south-1-433300649846"
-#   bucket_path: "docker-demo"
-#   on:
-#     branch: master
-#   access_key_id: $AWS_ACCESS_KEY
-#   secret_access_key: $AWS_SECRET_KEY
+deploy:
+  provider: elasticbeanstalk
+  region: 'us-east-1'
+  app: 'multi-docker'
+  env: 'MultiDocker-env'
+  bucket_name: 'bucket-name'
+  bucket_path: 'docker-multi'
+  on:
+    branch: main
+  access_key_id: $AWS_ACCESS_KEY
+  secret_access_key: $AWS_SECRET_KEY
